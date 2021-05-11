@@ -11,7 +11,7 @@ import chevronRight from '../../icons/chevron-right.svg';
 import * as Styled from './styles';
 
 const isFutureDate = (date: Date) => {
-  return differenceInMonths(date, new Date()) > -1;
+  return differenceInMonths(date, new Date()) > 0;
 };
 
 type Props = {
@@ -24,8 +24,8 @@ function MonthPicker(props: Props) {
   const { label, date, onChange } = props;
 
   const goToPreviousMonth = React.useCallback(() => {
+    if (!isFutureDate(date)) return;
     const previousMonth = subMonths(date, 1);
-    if (!isFutureDate(previousMonth)) return;
     onChange(previousMonth);
   }, [date, onChange]);
 

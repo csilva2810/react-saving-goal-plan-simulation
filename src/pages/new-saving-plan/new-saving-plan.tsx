@@ -12,7 +12,7 @@ import MonthPicker from '../../components/month-picker';
 import { Card, CardContent, OutlinedCard } from '../../components/card';
 
 import { formatMoney, calculateMonthlyAmount } from '../../services/money';
-import { getLongMonthName, calculateDiffInMonths } from '../../services/date';
+import { getLongMonthName, calculateDiffInMonths, getNextMonth } from '../../services/date';
 
 import * as Styled from './styles';
 
@@ -21,7 +21,7 @@ const nonDigit = /\D/gi;
 const NewSavingPlan = () => {
   const initialDate = React.useRef(new Date());
   const [totalAmount, setTotalAmount] = React.useState('');
-  const [goalDate, setReachDate] = React.useState(new Date());
+  const [goalDate, setReachDate] = React.useState(getNextMonth());
 
   const handleMonthChange = React.useCallback((date: Date) => {
     setReachDate(date);
