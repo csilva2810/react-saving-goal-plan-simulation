@@ -1,42 +1,73 @@
 import * as React from 'react';
-import { ReactSVG } from 'react-svg';
-
-import buyHouseIcon from '../../icons/buy-house.svg';
+import { RouteComponentProps } from 'react-router';
 
 import Box from '../../components/box';
 import Button from '../../components/button';
 import Text from '../../components/text';
-import Header from '../../components/header';
 import MoneyInput from '../../components/money-input';
 import MonthPicker from '../../components/month-picker';
 import { Card, CardContent, OutlinedCard } from '../../components/card';
 
 import { formatMoney, calculateMonthlyAmount } from '../../services/money';
-import { getLongMonthName, calculateDiffInMonths, getNextMonth } from '../../services/date';
+import {
+  getLongMonthName,
+  calculateDiffInMonths,
+  getNextMonth,
+} from '../../services/date';
+
+import { getSavingById, updateSaving } from '../../store';
 
 import * as Styled from './styles';
+import Icon from '../../components/icon';
 
 const nonDigit = /\D/gi;
+const removeSymbols = (value: string) => Number(value.replace(nonDigit, ''));
 
-const NewSavingPlan = () => {
+type Props = RouteComponentProps<{
+  savingId: string;
+}>;
+
+const NewSavingPlan = (props: Props) => {
+  const { history } = props;
+  const { savingId } = props.match.params;
+  const saving = getSavingById(Number(savingId));
+
   const initialDate = React.useRef(new Date());
-  const [totalAmount, setTotalAmount] = React.useState('');
-  const [goalDate, setReachDate] = React.useState(getNextMonth());
+  const [totalAmount, setTotalAmount] = React.useState(
+    String(saving?.totalAmount ?? '')
+  );
+  const [goalDate, setGoalDate] = React.useState(
+    saving?.goalDate ?? getNextMonth(initialDate.current)
+  );
 
   const handleMonthChange = React.useCallback((date: Date) => {
-    setReachDate(date);
+    setGoalDate(date);
   }, []);
-
   const totalMonths = calculateDiffInMonths(goalDate, initialDate.current);
   const monthlyAmount = calculateMonthlyAmount(
-    Number(totalAmount.replace(nonDigit, '')),
+    removeSymbols(totalAmount),
     totalMonths
   );
 
+  if (!saving) return <>Saving plan not found</>;
+
+  const handleConfirmClick = () => {
+    try {
+      updateSaving({
+        ...saving,
+        totalAmount: removeSymbols(totalAmount),
+        goalDate,
+      });
+
+      history.push('/savings', { updatedSavingId: saving.id });
+    } catch (e) {
+      alert(`Error: ${e.message}`);
+    }
+  };
+
   return (
     <Styled.Root>
-      <Header />
-      <Box my={4} mx={2}>
+      <Box py={4} px={2}>
         <Text
           as="h2"
           variant="subtitle"
@@ -50,17 +81,13 @@ const NewSavingPlan = () => {
       <Box as={Card} width={[1, '560px']} m="0 auto">
         <CardContent>
           <Box display="flex" alignItems="center" mb={3}>
-            <Box
-              mr={2}
-              width="64"
-              height="64"
-              as={ReactSVG}
-              src={buyHouseIcon}
-            />
+            <Box mr={2}>
+              <Icon name={saving.icon} size="64px" />
+            </Box>
             <div>
               <Box mb="4px">
                 <Text as="h3" variant="headingSmall" fontWeight="bold">
-                  Buy a house
+                  {saving?.name}
                 </Text>
               </Box>
               <Text as="h3" variant="paragraph" color="blueGray400">
@@ -121,7 +148,7 @@ const NewSavingPlan = () => {
             </OutlinedCard>
           </Box>
 
-          <Button fullWidth onClick={() => console.log('click')}>
+          <Button fullWidth onClick={handleConfirmClick}>
             Confirm
           </Button>
         </CardContent>

@@ -4,14 +4,16 @@ import {
   layout,
   color,
   flexbox,
+  grid,
   SpaceProps,
   LayoutProps,
   ColorProps,
   FlexboxProps,
+  GridProps,
 } from 'styled-system';
 
-type Props = SpaceProps & LayoutProps & ColorProps & FlexboxProps;
+type Props = SpaceProps & LayoutProps & ColorProps & FlexboxProps & GridProps;
 
-const Box = styled('div')<Props>(space, layout, color, flexbox);
+const Box = styled('div')<Props>(space, layout, color, flexbox, grid);
 
 export default Box;

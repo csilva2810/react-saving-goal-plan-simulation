@@ -1,5 +1,5 @@
 import differenceInMonths from 'date-fns/differenceInMonths';
-import addMonth from 'date-fns/addMonths'
+import addMonth from 'date-fns/addMonths';
 
 export const getLongMonthName = (date: Date) =>
   date.toLocaleString('default', { month: 'long' });
@@ -7,4 +7,4 @@ export const getLongMonthName = (date: Date) =>
 export const calculateDiffInMonths = (left: Date, right: Date) =>
   differenceInMonths(left, right);
 
-export const getNextMonth = () => addMonth(new Date(), 1)
+export const getNextMonth = (date: Date = new Date()) => addMonth(date, 1);

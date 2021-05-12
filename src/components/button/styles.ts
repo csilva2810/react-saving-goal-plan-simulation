@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 type ButtonProps = {
   fullWidth?: boolean;
+  isSmall?: boolean;
 };
 const Button = styled.button<ButtonProps>`
   min-width: 150px;
@@ -26,6 +27,12 @@ const Button = styled.button<ButtonProps>`
     props.fullWidth &&
     css`
       width: 100%;
+    `};
+
+  ${(props) =>
+    props.isSmall &&
+    css`
+      height: 40px;
     `};
 `;
 

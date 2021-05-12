@@ -1,18 +1,19 @@
-import { getItem, setItem } from "../services/storage";
+import { getItem, setItem } from '../services/storage';
+import { IconName } from '../types/icon';
 
 export type Saving = {
-  name: string;
-  icon: string;
-  id: number;
+  readonly name: string;
+  readonly icon: IconName;
+  readonly id: number;
   totalAmount?: number;
   goalDate?: Date;
-}
+};
 
 export type Savings = Saving[];
 
 export type Store = {
   savings: Savings;
-}
+};
 
 const STORE_KEY = 'APP_STORE';
 const defaultState: Store = {
@@ -51,23 +52,62 @@ const defaultState: Store = {
       id: 7,
       name: 'Buy a house',
       icon: 'buy-a-house',
-    }
+    },
   ],
-}
+};
 export function getState() {
   const storedData = getItem<Store>(STORE_KEY);
-
   if (!storedData) return defaultState;
 
+  const savings = storedData.savings.map((saving) => ({
+    ...saving,
+    goalDate: saving.goalDate ? new Date(saving.goalDate) : undefined,
+  }));
+
   return {
-    savings: defaultState.savings.map(saving => {
-      const item = storedData.savings.find(s => s.id === saving.id);
-      if (item) return item;
-      return saving;
-    }),
-  }
+    savings,
+  };
 }
 
 export function saveState(state: Store) {
   setItem(STORE_KEY, state);
+}
+
+export function getSavingById(id: number): Saving | undefined {
+  const savings = getState().savings;
+
+  return savings.find((saving: Saving) => saving.id === id);
+}
+
+export class UpdateSavingError extends Error {
+  constructor(message: string) {
+    super(message);
+
+    this.message = message;
+  }
+}
+export function updateSaving({ id, totalAmount, goalDate }: Required<Saving>) {
+  const saving = getSavingById(id);
+
+  if (!saving) throw new UpdateSavingError('Saving not found');
+
+  const state = getState();
+  const newSavings = state.savings.map((s: Saving) => {
+    if (s.id === id) {
+      return {
+        ...saving,
+        goalDate,
+        totalAmount,
+      };
+    }
+
+    return s;
+  });
+
+  const newState = {
+    ...state,
+    savings: newSavings,
+  };
+
+  saveState(newState);
 }

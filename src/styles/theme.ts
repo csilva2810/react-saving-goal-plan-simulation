@@ -32,7 +32,7 @@ declare module 'styled-components' {
 
 export const theme: DefaultTheme = {
   breakpoints: ['768px'],
-  space: [0, 8, 16, 24, 32, 40],
+  space: [0, 8, 16, 24, 32, 40, 48, 56],
   radii: ['0px', '4px', '8px', '16px', '32px'],
   fontWeights: [400, 500, 600],
   colors: {
