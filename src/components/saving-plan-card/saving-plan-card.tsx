@@ -22,9 +22,21 @@ const SavingPlanCard = (props: Props) => {
 
   return (
     <Card>
-      <CardContent>
-        <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
-          <Box mb={1}>
+      <Box
+        as={CardContent}
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+        height="100%"
+      >
+        <Box
+          display="flex"
+          flexDirection={['row', 'column']}
+          alignItems="center"
+          mb={2}
+          mt={[0, isPlanned ? 0 : 5]}
+        >
+          <Box mb={[0, 1]} mr={[2, 0]}>
             <Icon name={saving.icon} />
           </Box>
           <Text variant="paragraph" fontWeight={2}>
@@ -66,7 +78,7 @@ const SavingPlanCard = (props: Props) => {
         <Button fullWidth isSmall onClick={props.onClickAction}>
           {saving.totalAmount ? 'Edit goal' : 'Setup goal'}
         </Button>
-      </CardContent>
+      </Box>
     </Card>
   );
 };

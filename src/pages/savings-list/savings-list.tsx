@@ -32,7 +32,7 @@ export default function SavingsList(props: Props) {
 
         <Box
           display="grid"
-          gridTemplateColumns="repeat(auto-fill, minmax(min(250px, 100%), 1fr))"
+          gridTemplateColumns="repeat(auto-fill, minmax(min(272px, 100%), 1fr))"
           gridGap={2}
         >
           {savings.map((saving) => (
