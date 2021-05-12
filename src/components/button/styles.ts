@@ -1,8 +1,10 @@
 import styled, { css } from 'styled-components';
+import { variant } from 'styled-system';
 
 type ButtonProps = {
   fullWidth?: boolean;
   isSmall?: boolean;
+  variant?: 'primary' | 'default';
 };
 const Button = styled.button<ButtonProps>`
   min-width: 150px;
@@ -18,10 +20,22 @@ const Button = styled.button<ButtonProps>`
   ${({ theme }) => css`
     height: ${theme.sizes.button};
     padding: ${theme.space[1]}px ${theme.space[2]}px;
-    background-color: ${theme.colors.brandPrimary};
-    color: ${theme.colors.brandPrimaryText};
-    border-radius: ${theme.radii[4]};
   `};
+
+  ${variant({
+    variants: {
+      default: {
+        bg: 'background',
+        color: 'brandSecondary',
+        borderRadius: 2,
+      },
+      primary: {
+        bg: 'brandPrimary',
+        color: 'brandPrimaryText',
+        borderRadius: 4,
+      },
+    },
+  })}
 
   ${(props) =>
     props.fullWidth &&
@@ -35,5 +49,11 @@ const Button = styled.button<ButtonProps>`
       height: 40px;
     `};
 `;
+
+Button.defaultProps = {
+  fullWidth: false,
+  isSmall: false,
+  variant: 'primary',
+};
 
 export default Button;

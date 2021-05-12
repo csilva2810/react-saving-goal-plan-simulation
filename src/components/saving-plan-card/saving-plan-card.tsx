@@ -75,7 +75,12 @@ const SavingPlanCard = (props: Props) => {
           </Box>
         )}
 
-        <Button fullWidth isSmall onClick={props.onClickAction}>
+        <Button
+          fullWidth
+          isSmall
+          variant={isPlanned ? 'default' : 'primary'}
+          onClick={props.onClickAction}
+        >
           {saving.totalAmount ? 'Edit goal' : 'Setup goal'}
         </Button>
       </Box>
