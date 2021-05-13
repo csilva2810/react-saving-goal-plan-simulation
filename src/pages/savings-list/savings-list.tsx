@@ -1,25 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { RouteComponentProps } from 'react-router';
 
-import { getState } from '../../store';
 import Text from '../../components/text';
 import Box from '../../components/box';
 import SavingPlanCard from '../../components/saving-plan-card';
-import { RouteComponentProps } from 'react-router';
+import { useStore } from '../../store/provider';
 
 type Props = RouteComponentProps<{}, {}, { updatedSavingId?: number }>;
 
 export default function SavingsList(props: Props) {
-  const { history, location } = props;
-  const [savings, setSavings] = useState(() => {
-    return getState().savings;
-  });
-
-  React.useEffect(() => {
-    if (location?.state?.updatedSavingId) {
-      const newSavings = getState().savings;
-      setSavings(newSavings);
-    }
-  }, [location.state]);
+  const { history } = props;
+  const {
+    state: { savings },
+  } = useStore();
 
   return (
     <Box bg="background">

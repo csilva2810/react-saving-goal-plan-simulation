@@ -15,10 +15,9 @@ import {
   getNextMonth,
 } from '../../services/date';
 
-import { getSavingById, updateSaving } from '../../store';
-
 import * as Styled from './styles';
 import Icon from '../../components/icon';
+import { useStore } from '../../store';
 
 const nonDigit = /\D/gi;
 const removeSymbols = (value: string) => Number(value.replace(nonDigit, ''));
@@ -30,7 +29,9 @@ type Props = RouteComponentProps<{
 const NewSavingPlan = (props: Props) => {
   const { history } = props;
   const { savingId } = props.match.params;
-  const saving = getSavingById(Number(savingId));
+
+  const { actions } = useStore();
+  const saving = actions.getSavingById(Number(savingId));
 
   const initialDate = React.useRef(new Date());
   const [totalAmount, setTotalAmount] = React.useState(
@@ -53,13 +54,13 @@ const NewSavingPlan = (props: Props) => {
 
   const handleConfirmClick = () => {
     try {
-      updateSaving({
+      actions.updateSaving({
         ...saving,
         totalAmount: removeSymbols(totalAmount),
         goalDate,
       });
 
-      history.push('/savings', { updatedSavingId: saving.id });
+      history.push('/savings');
     } catch (e) {
       alert(`Error: ${e.message}`);
     }
