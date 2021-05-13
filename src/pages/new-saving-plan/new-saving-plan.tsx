@@ -22,6 +22,7 @@ import { updateSaving } from '../../store/savings';
 
 const nonDigit = /\D/gi;
 const removeSymbols = (value: string) => Number(value.replace(nonDigit, ''));
+const getFirstDayOfCurrentMonth = () => new Date(new Date().setDate(1));
 
 type Props = RouteComponentProps<{
   savingId: string;
@@ -34,18 +35,18 @@ const NewSavingPlan = (props: Props) => {
   const { state, dispatch } = useStore();
   const saving = state.savings.find((saving) => saving.id === Number(savingId));
 
-  const initialDate = React.useRef(new Date());
+  const curentMonth = React.useRef(getFirstDayOfCurrentMonth());
   const [totalAmount, setTotalAmount] = React.useState(
     String(saving?.totalAmount ?? '')
   );
   const [goalDate, setGoalDate] = React.useState(
-    saving?.goalDate ?? getNextMonth(initialDate.current)
+    saving?.goalDate ?? getNextMonth(curentMonth.current)
   );
 
   const handleMonthChange = React.useCallback((date: Date) => {
     setGoalDate(date);
   }, []);
-  const totalMonths = calculateDiffInMonths(goalDate, initialDate.current);
+  const totalMonths = calculateDiffInMonths(goalDate, curentMonth.current);
   const monthlyAmount = calculateMonthlyAmount(
     removeSymbols(totalAmount),
     totalMonths
