@@ -18,6 +18,7 @@ import {
 import * as Styled from './styles';
 import Icon from '../../components/icon';
 import { useStore } from '../../store';
+import { updateSaving } from '../../store/savings';
 
 const nonDigit = /\D/gi;
 const removeSymbols = (value: string) => Number(value.replace(nonDigit, ''));
@@ -30,8 +31,8 @@ const NewSavingPlan = (props: Props) => {
   const { history } = props;
   const { savingId } = props.match.params;
 
-  const { actions } = useStore();
-  const saving = actions.getSavingById(Number(savingId));
+  const { state, dispatch } = useStore();
+  const saving = state.savings.find((saving) => saving.id === Number(savingId));
 
   const initialDate = React.useRef(new Date());
   const [totalAmount, setTotalAmount] = React.useState(
@@ -54,11 +55,13 @@ const NewSavingPlan = (props: Props) => {
 
   const handleConfirmClick = () => {
     try {
-      actions.updateSaving({
-        ...saving,
-        totalAmount: removeSymbols(totalAmount),
-        goalDate,
-      });
+      dispatch(
+        updateSaving({
+          ...saving,
+          totalAmount: removeSymbols(totalAmount),
+          goalDate,
+        })
+      );
 
       history.push('/savings');
     } catch (e) {

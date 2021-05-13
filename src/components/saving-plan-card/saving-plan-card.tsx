@@ -34,7 +34,7 @@ const SavingPlanCard = (props: Props) => {
           flexDirection={['row', 'column']}
           alignItems="center"
           mb={2}
-          mt={[0, isPlanned ? 0 : 5]}
+          mt={[0, isPlanned ? 0 : 2]}
         >
           <Box mb={[0, 1]} mr={[2, 0]}>
             <Icon name={saving.icon} />

@@ -14,7 +14,11 @@ export type Store = {
   savings: Savings;
 };
 
+export interface BaseAction {
+  type: any;
+  payload?: any;
+}
 export type StoreContextType = {
   state: Store;
-  actions: Record<string, Function>;
+  dispatch: (action: BaseAction) => void;
 };
